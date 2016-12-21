@@ -30,7 +30,7 @@ StreamBase* ConnectorTCP::connect(const char* ip, int port){
 	dest.sin_port = htons(port);
 
 	if(::connect(sockid, (struct sockaddr *)&dest, sizeof(struct sockaddr_in))){
-		cout << NetLog.err("connecting to IP(%s), port(%i) failed", ip, port);
+		NET_ERR("connecting to IP(%s), port(%i) failed", ip, port);
 		return NULL;
 	}
 

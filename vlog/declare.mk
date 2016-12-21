@@ -1,5 +1,6 @@
 # editable
-TARGET = vlog.a
+TARGET = libVlog.a
 SOURCEDIR = source
-INCLUDEDIR = include
+
+INCLUDE = -I./include \
 #

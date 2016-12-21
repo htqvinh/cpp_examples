@@ -10,8 +10,6 @@
 
 #include <iostream>
 #include <string.h>
-//#include <stdlib.h>
-//#include <unistd.h>
 
 #include <arpa/inet.h>
 #include <netinet/in.h>
@@ -19,6 +17,7 @@
 #include <sys/socket.h>
 
 #include "VLog.h"
+#include "defines.h"
 
 using namespace std;
 

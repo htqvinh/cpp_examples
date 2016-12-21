@@ -20,3 +20,11 @@ StreamTCP::~StreamTCP() {
 	// TODO Auto-generated destructor stub
 }
 
+int StreamTCP::send(char* buff, size_t len){
+	return 0;
+}
+
+int StreamTCP::recv(char* buff, size_t len){
+	return 0;
+}
+

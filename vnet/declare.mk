@@ -1,5 +1,7 @@
 # editable
-TARGET = vnet
+TARGET = libVnet.a
 SOURCEDIR = source
-INCLUDEDIR = include
+
+INCLUDE = -I./include \
+	-I/data/proj/cpp_examples/vlog/include \
 #
