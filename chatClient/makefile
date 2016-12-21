@@ -1,8 +1,8 @@
 
 include declare.mk
 
-CPPFLAGS = $(DEBUG) $(INCLUDE) 	#for g++
-#CFLAGS	= $(DEBUG) $(INCLUDE) 	#for gcc
+CPPFLAGS = $(FLAGS) $(INCLUDE) 	#for g++
+#CFLAGS	= $(FLAGS) $(INCLUDE) 	#for gcc
 
 SOURCES = $(shell find $(SOURCEDIR) -name '*.cpp')
 OBJECTS = $(patsubst %.cpp, %.o, $(SOURCES))
@@ -11,7 +11,7 @@ all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
 	@echo "--->>> Linking" 
-	$(CXX) $(DEBUG) -o $@ $(OBJECTS) $(LIB) 
+	$(CXX) $(FLAGS) -o $@ $(OBJECTS) $(LIB) 
 
 clean:
 	rm -f $(TARGET)

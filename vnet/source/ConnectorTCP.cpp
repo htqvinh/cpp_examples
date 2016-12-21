@@ -8,7 +8,6 @@
 #include "ConnectorTCP.h"
 
 using namespace std;
-extern VLog NetLog;
 
 ConnectorTCP::ConnectorTCP() {
 	// TODO Auto-generated constructor stub
@@ -30,7 +29,7 @@ StreamBase* ConnectorTCP::connect(const char* ip, int port){
 	dest.sin_port = htons(port);
 
 	if(::connect(sockid, (struct sockaddr *)&dest, sizeof(struct sockaddr_in))){
-		NET_ERR("connecting to IP(%s), port(%i) failed", ip, port);
+		cout << NET_ERR("connecting to IP(%s), port(%i) failed\n", ip, port);
 		return NULL;
 	}
 

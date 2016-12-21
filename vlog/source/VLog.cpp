@@ -31,7 +31,8 @@ string VLog::out(const char* type, const char* func, int line, const char* patte
 
 	char *cont = NULL;
 	vasprintf(&cont, pattern, args);
-	string log = getContent("[%s][%s][%i]:%s", getCurrentTime().c_str(), func, line, cont);
+	string log = getContent("[%s][%s:%i]\t%s",
+			getCurrentTime().c_str(), func, line, cont);
 	free(cont);
 
 	va_end(args);

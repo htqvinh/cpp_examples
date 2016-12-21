@@ -34,8 +34,9 @@ string getContent(const char* format, ...){
 
 	char *content = NULL;
 	vasprintf(&content, format, args);
+	string str(content);
 	free(content);
 
 	va_end(args);
-	return string(content);
+	return str;
 }
