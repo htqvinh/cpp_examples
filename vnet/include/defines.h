@@ -9,6 +9,8 @@
 #define INCLUDE_DEFINES_H_
 
 extern VLog NetLog;
-#define NET_ERR(s, ...) NetLog.err(s, __VA_ARGS__)
+#define NET_LOG(s, ...) NetLog.out("LOG", __FUNCTION__, __LINE__, s, __VA_ARGS__)
+#define NET_ERR(s, ...) NetLog.out("ERR", __FUNCTION__, __LINE__, s, __VA_ARGS__)
+#define NET_WRN(s, ...) NetLog.out("ERR", __FUNCTION__, __LINE__, s, __VA_ARGS__)
 
 #endif /* INCLUDE_DEFINES_H_ */

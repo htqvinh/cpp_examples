@@ -16,9 +16,7 @@ public:
 	VLog(const char* fileName);
 	virtual ~VLog();
 
-	string log(const char* pattern, ...);
-	string wrn(const char* pattern, ...);
-	string err(const char* pattern, ...);
+	string out(const char* type, const char* func, int line, const char* pattern, ...);
 
 protected:
 	const char* _fileName;
