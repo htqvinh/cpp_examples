@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <cstdarg>
 #include <stdlib.h>
+#include <fstream>
 
 #include "VLog.h"
 #include "VUtil.h"
@@ -24,6 +25,17 @@ VLog::~VLog() {
 
 }
 
+int VLog::write(string log){
+
+	ofstream myfile (_fileName, ios::out | ios::app );
+	if (myfile.is_open()){
+		myfile << log;
+		myfile.close();
+		return 1;
+	}
+	return 0;
+}
+
 string VLog::out(const char* type, const char* func, int line, const char* pattern, ...){
 
 	va_list args;
@@ -31,10 +43,12 @@ string VLog::out(const char* type, const char* func, int line, const char* patte
 
 	char *cont = NULL;
 	vasprintf(&cont, pattern, args);
-	string log = getContent("[%s][%s:%i]\t%s",
-			getCurrentTime().c_str(), func, line, cont);
-	free(cont);
+	string log = getContent("[%s][%s][%s:%i] %s",
+			getCurrentTime().c_str(), type, func, line, cont);
 
+	write(log);
+	free(cont);
 	va_end(args);
+
 	return log;
 }

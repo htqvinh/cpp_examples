@@ -20,6 +20,7 @@ public:
 
 protected:
 	const char* _fileName;
+	int write(string log);
 };
 
 #endif /* INCLUDE_VLOG_H_ */
