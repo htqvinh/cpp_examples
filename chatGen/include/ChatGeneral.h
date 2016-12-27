@@ -9,8 +9,7 @@
 #define CHATGENERAL_H_
 
 #include <stdio.h>
-
-class StreamBase;
+#include "StreamBase.h"
 
 enum MTYPE {
 	MESS_A = 0,
@@ -25,11 +24,11 @@ struct CMessage{
 	unsigned 	_Len;
 	char*		_Data;
 
-	CMessage(MTYPE type = MESS_A, unsigned len = 0, char* data = NULL);
+	CMessage(MTYPE type, unsigned len, char* data);
 	~CMessage();
-	int sendTo(StreamBase* stream);
-	int recvFrom(StreamBase* stream);
 };
 
+int send_and_close(StreamBaseSptr stream_ptr, CMessage m);
+int send_and_keep(StreamBaseSptr stream_ptr, CMessage m);
 
 #endif /* CHATGENERAL_H_ */
