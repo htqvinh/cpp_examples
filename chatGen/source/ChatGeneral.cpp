@@ -8,6 +8,16 @@
 #include "ChatGeneral.h"
 #include "StreamBase.h"
 
+CMessage::CMessage(MTYPE type, unsigned len, char* data)
+	:_Type(type), _Len(len), _Data(data)
+{
+
+}
+
+CMessage::~CMessage(){
+
+}
+
 int CMessage::sendTo(StreamBase* stream){
 
 	if(!stream) return -1;
@@ -17,10 +27,9 @@ int CMessage::sendTo(StreamBase* stream){
 			1/*LEN: 	1byte */ + _Len;
 
 	char buff[ size ];
-	memcpy((void*)buff[0], (void*)_Type	, 1);
-	memcpy((void*)buff[1], (void*)_Len	, 1);
-	memcpy((void*)buff[2], (void*)_Data	, _Len);
-
+	buff[0] = _Type & 0xFF;
+	buff[1] = _Len 	& 0xFF;
+	memcpy((void*)(buff + 2), (void*)_Data, (size_t)_Len);
 	return stream->send(buff, size);
 }
 

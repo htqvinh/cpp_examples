@@ -8,6 +8,8 @@
 #ifndef CHATGENERAL_H_
 #define CHATGENERAL_H_
 
+#include <stdio.h>
+
 class StreamBase;
 
 enum MTYPE {
@@ -23,6 +25,8 @@ struct CMessage{
 	unsigned 	_Len;
 	char*		_Data;
 
+	CMessage(MTYPE type = MESS_A, unsigned len = 0, char* data = NULL);
+	~CMessage();
 	int sendTo(StreamBase* stream);
 	int recvFrom(StreamBase* stream);
 };

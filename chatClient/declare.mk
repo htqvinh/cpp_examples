@@ -1,7 +1,7 @@
 # editable
 TARGET 		= ChatClient
 SOURCEDIR 	= source
-FLAGS 		= -g
+FLAGS 		= -g -std=c++11
 
 INCLUDE 	= -I./include \
 	-I/data/proj/cpp_examples/vnet/include \

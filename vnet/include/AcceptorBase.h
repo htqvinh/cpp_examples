@@ -15,7 +15,7 @@ public:
 	AcceptorBase();
 	virtual ~AcceptorBase();
 	virtual int init(int port) = 0;
-	virtual StreamBase* accept() = 0;
+	virtual StreamBaseSptr accept() = 0;
 
 protected:
 	int _sockId;
@@ -28,7 +28,7 @@ public:
 	AcceptorTCP();
 	~AcceptorTCP();
 	int init(int port);
-	StreamBase* accept();
+	StreamBaseSptr accept();
 };
 
 class AcceptorUDP
@@ -38,7 +38,7 @@ public:
 	AcceptorUDP();
 	~AcceptorUDP();
 	int init(int port);
-	StreamBase* accept();
+	StreamBaseSptr accept();
 };
 
 #endif /* INCLUDE_ACCEPTORBASE_H_ */

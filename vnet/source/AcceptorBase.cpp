@@ -8,25 +8,19 @@
 
 #include "AcceptorBase.h"
 
-AcceptorBase::AcceptorBase():_sockId(-1)
-{
+AcceptorBase::AcceptorBase()
+	:_sockId(-1){ }
 
-}
+AcceptorBase::~AcceptorBase() { }
 
-AcceptorBase::~AcceptorBase() {
-}
+AcceptorTCP::AcceptorTCP(){ }
 
-AcceptorTCP::AcceptorTCP(){
-
-}
-
-AcceptorTCP::~AcceptorTCP(){
-
-}
+AcceptorTCP::~AcceptorTCP(){ }
 
 int AcceptorTCP::init(int port){
 
-	if(_sockId > 0) return 1;
+	if(_sockId > 0) return _sockId;
+
     _sockId = socket(AF_INET, SOCK_STREAM, 0);
 
     struct sockaddr_in serv;
@@ -37,21 +31,24 @@ int AcceptorTCP::init(int port){
 
     if(bind(_sockId, (struct sockaddr *)&serv, sizeof(struct sockaddr)) == -1){
     	cout << NET_ERR("Can't bind socket on port(%i)\n", port);
-    	return 0;
+    	return -1;
     }
 
     if(listen(_sockId, 1) == -1){
     	cout << NET_ERR("Can't listen socket\n", "");
-    	return 0;
+    	return -1;
     }
 
-    return 1;
+    return _sockId;
 }
 
-StreamBase* AcceptorTCP::accept(){
+StreamBaseSptr AcceptorTCP::accept(){
+
+	if(_sockId < 0) return nullptr;
+
 	struct sockaddr_in dest;
 	socklen_t socksize = sizeof(struct sockaddr_in);
 	int consocket = ::accept(_sockId, (struct sockaddr *)&dest, &socksize);
-	return new StreamTCP(consocket, &dest);
+	return StreamBaseSptr(new StreamTCP(inet_ntoa(dest.sin_addr), htons(dest.sin_port), consocket));
 }
 

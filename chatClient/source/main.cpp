@@ -14,14 +14,16 @@ using namespace std;
 
 int main (int argc, char** argv) {
 
-	ConnectorTCP tcp;
+	StreamBaseSptr stream(new StreamTCP("127.0.0.1", 5001));
 
-	for(int i = 0; i < NUM_CONN; ++i){
-		StreamBase* stream = tcp.connect("127.0.0.1", 5001);
-		string hello = "Hello world!!!";
-		CMessage mess = { MTYPE::MESS_A, hello.size(), hello.c_str()};
-		mess.sendTo(stream);
+	ConnectorTCP tcp;
+	if(tcp.connect(stream) == -1){
+		return -1;
 	}
+
+	string hello = "Hello world!!!";
+	CMessage mess = { MESS_A, (unsigned)hello.size(), (char*)hello.c_str()};
+	mess.sendTo(stream.get());
 
 	cout << argv[0] << endl;
 	return 0;

@@ -9,6 +9,7 @@
 #define INCLUDE_STREAMBASE_H_
 
 #include <iostream>
+#include <memory>
 #include <string.h>
 
 #include <arpa/inet.h>
@@ -23,29 +24,36 @@
 using namespace std;
 
 class StreamBase {
+
+	friend class ConnectorBase;
+	friend class ConnectorTCP;
+	friend class ConnectorUDP;
+
 public:
-	StreamBase(int sockid, int port, string ip);
+	StreamBase(string ip, int port, int fd = -1);
 	virtual ~StreamBase();
 	virtual int send(char* buff, size_t len) = 0;
 	virtual int recv(char* buff, size_t len) = 0;
 
-	int 	getSockId();
-	int 	getPort();
-	string 	getIP();
+	string 	getIP()		{ return _Ip;	}
+	int 	getPort()	{ return _Port;	}
+	int 	getFd()		{ return _Fd;	}
 
 protected:
-	int     	_sockId;
-	int     	_peerPort;
-	string  	_peerIP;
+	string  	_Ip;
+	int     	_Port;
+	int     	_Fd;
 };
 
 class StreamTCP
 		: public StreamBase {
 public:
-	StreamTCP(int sockid, struct sockaddr_in* address);
+	StreamTCP(string ip, int port, int fd = -1);
 	virtual ~StreamTCP();
 	int send(char* buff, size_t len);
 	int recv(char* buff, size_t len);
 };
+
+typedef shared_ptr<StreamBase> StreamBaseSptr;
 
 #endif /* INCLUDE_STREAMBASE_H_ */

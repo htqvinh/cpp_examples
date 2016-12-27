@@ -23,20 +23,29 @@ ConnectorTCP::~ConnectorTCP() {
 
 }
 
-StreamBase* ConnectorTCP::connect(const char* ip, int port){
+int ConnectorTCP::connect(StreamBaseSptr sptr){
 
-	int sockid = socket(AF_INET, SOCK_STREAM, 0);
+	if(!sptr) {
+		cout << NET_ERR("StreamBaseSptr pointer is null", "");
+		return -1;
+	}
+
+	sptr->_Fd = socket(AF_INET, SOCK_STREAM, 0);
+	if(sptr->_Fd == -1){
+		cout << NET_ERR("Can't initialize a socket", "");
+		return -1;
+	}
 
 	struct sockaddr_in dest;
 	memset(&dest, 0, sizeof(dest));
 	dest.sin_family = AF_INET;
-	dest.sin_addr.s_addr = inet_addr(ip);
-	dest.sin_port = htons(port);
+	dest.sin_addr.s_addr = inet_addr(sptr->_Ip.c_str());
+	dest.sin_port = htons(sptr->_Port);
 
-	if(::connect(sockid, (struct sockaddr *)&dest, sizeof(struct sockaddr_in))){
-		cout << NET_ERR("connecting to IP(%s), port(%i) failed\n", ip, port);
-		return NULL;
+	if(::connect(sptr->_Fd, (struct sockaddr *)&dest, sizeof(struct sockaddr_in))){
+		cout << NET_ERR("connecting to IP(%s), port(%i) failed\n", sptr->_Ip.c_str(), sptr->_Port);
+		return -1;
 	}
 
-	return new StreamTCP(sockid, &dest);
+	return 0;
 }

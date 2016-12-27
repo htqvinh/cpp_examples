@@ -1,1 +1,2 @@
 [2016-12-22 11:31:30][ERR][source/ConnectorBase.cpp:37] connecting to IP(127.0.0.1), port(5001) failed
+[2016-12-27 01:50:42][ERR][source/ConnectorBase.cpp:46] connecting to IP(127.0.0.1), port(5001) failed
