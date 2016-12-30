@@ -5,8 +5,8 @@
  *      Author: htqvinh
  */
 
-#ifndef VQUEUESAFE_H_
-#define VQUEUESAFE_H_
+#ifndef VQUEUE_H_
+#define VQUEUE_H_
 
 #include <queue>
 #include <mutex>

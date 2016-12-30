@@ -5,8 +5,8 @@
  *      Author: htqvinh
  */
 
-#ifndef INCLUDE_VUTIL_H_
-#define INCLUDE_VUTIL_H_
+#ifndef VUTIL_H_
+#define VUTIL_H_
 
 #include <string>
 using namespace std;
