@@ -14,7 +14,7 @@ class ConnectorBase {
 public:
 	ConnectorBase();
 	virtual ~ConnectorBase();
-	virtual int connect(StreamBaseSptr sptr) = 0;
+	virtual int connect(string ip, unsigned port, int& fd) = 0;
 };
 
 class ConnectorTCP
@@ -22,7 +22,7 @@ class ConnectorTCP
 public:
 	ConnectorTCP();
 	virtual ~ConnectorTCP();
-	int connect(StreamBaseSptr sptr);
+	int connect(string ip, unsigned port, int& fd);
 };
 
 #endif /* INCLUDE_CONNECTORBASE_H_ */

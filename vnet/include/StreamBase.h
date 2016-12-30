@@ -23,6 +23,9 @@
 
 using namespace std;
 
+class StreamBase;
+typedef shared_ptr<StreamBase> StreamBaseSptr;
+
 class StreamBase {
 
 	friend class ConnectorBase;
@@ -34,15 +37,13 @@ public:
 	virtual ~StreamBase();
 	virtual int send(char* buff, size_t len) = 0;
 	virtual int recv(char* buff, size_t len) = 0;
-
-	string 	getIP()		{ return _Ip;	}
-	int 	getPort()	{ return _Port;	}
-	int 	getFd()		{ return _Fd;	}
+	virtual int connect() = 0;
+	virtual int close() = 0;
 
 protected:
-	string  	_Ip;
-	int     	_Port;
-	int     	_Fd;
+	string  		_Ip;
+	int     		_Port;
+	int     		_Fd;
 };
 
 class StreamTCP
@@ -52,8 +53,8 @@ public:
 	virtual ~StreamTCP();
 	int send(char* buff, size_t len);
 	int recv(char* buff, size_t len);
+	int connect();
+	int close();
 };
-
-typedef shared_ptr<StreamBase> StreamBaseSptr;
 
 #endif /* INCLUDE_STREAMBASE_H_ */

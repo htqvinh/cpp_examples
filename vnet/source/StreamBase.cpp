@@ -6,6 +6,7 @@
  */
 
 #include "StreamBase.h"
+#include "ConnectorBase.h"
 
 StreamBase::StreamBase(string ip, int port, int fd)
 	:_Ip(ip), _Port(port), _Fd(fd){ }
@@ -31,8 +32,7 @@ int StreamTCP::send(char* buff, size_t len){
 			return -1;
 		}
 	}
-
-	return len;
+	return 0;
 }
 
 int StreamTCP::recv(char* buff, size_t len){
@@ -49,5 +49,21 @@ int StreamTCP::recv(char* buff, size_t len){
 			return -1;
 		}
 	}
-	return len;
+	return 0;
+}
+
+int StreamTCP::connect(){
+	if(_Fd == -1){
+		ConnectorTCP tcp;
+		tcp.connect(_Ip, _Port, _Fd);
+	}
+	return _Fd;
+}
+
+int StreamTCP::close(){
+	if(_Fd > 0){
+		::close(_Fd);
+		_Fd = -1;
+	}
+	return 0;
 }
