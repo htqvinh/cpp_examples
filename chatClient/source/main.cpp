@@ -5,28 +5,26 @@
  *      Author: htqvinh
  */
 
+#include <general.h>
 #include <iostream>
-#include "ChatGeneral.h"
 #include "ConnectorBase.h"
+#include "Sender.h"
 using namespace std;
-
-#define NUM_CONN 1000
 
 int main (int argc, char** argv) {
 
-	StreamBaseSptr stream(new StreamTCP("127.0.0.1", 5001));
-
-	ConnectorTCP tcp;
-	if(tcp.connect(stream) == -1){
-		return -1;
-	}
+	Sender sender;
+	sender.active(true);
 
 	string hello = "Hello world!!!";
 	CMessage mess = { MESS_A, (unsigned)hello.size(), (char*)hello.c_str()};
-	mess.sendTo(stream.get());
+	StreamBaseSptr stream(new StreamTCP("127.0.0.1", 5001));
 
-	cout << argv[0] << endl;
+	sender.push({ stream, mess, send_and_close});
+	sender.push({ stream, mess, send_and_close});
+	sender.push({ stream, mess, send_and_close});
+
+	this_thread::sleep_for (std::chrono::seconds(10));
+
 	return 0;
 }
-
-
