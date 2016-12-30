@@ -5,12 +5,10 @@
  *      Author: htqvinh
  */
 
-#include "/data/proj/cpp_examples/chatGen/include/Receiver.h"
+#include "Receiver.h"
 
-Receiver::Receiver() {
-	// TODO Auto-generated constructor stub
-
-}
+Receiver::Receiver(unsigned port)
+	:_Port(port){}
 
 Receiver::~Receiver() {
 	// TODO Auto-generated destructor stub

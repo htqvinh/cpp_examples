@@ -10,25 +10,25 @@
 
 #include <thread>
 #include <chrono>
-#include "../../vutil/include/VQueue.h"
+#include "VQueue.h"
+#include "VHandler.h"
 #include "general.h"
 
 using namespace std;
 
 class Sender
+	: public VHandler
 {
 public:
-	Sender();
+	Sender(unsigned num_of_threads = 1);
 	virtual ~Sender();
 	void push(CPackage p);
-	void active(bool f = true);
 
 protected:
 	void process();
 
 protected:
 	VQueue<CPackage> _queue;
-	bool _isActive;
 };
 
 #endif /* INCLUDE_SENDER_H_ */

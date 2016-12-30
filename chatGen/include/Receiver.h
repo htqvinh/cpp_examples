@@ -10,8 +10,14 @@
 
 class Receiver {
 public:
-	Receiver();
+	Receiver(unsigned port);
 	virtual ~Receiver();
+
+protected:
+	void process();
+
+protected:
+	unsigned _Port;
 };
 
 #endif /* INCLUDE_RECEIVER_H_ */
