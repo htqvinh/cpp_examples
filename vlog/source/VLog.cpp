@@ -18,7 +18,10 @@
 VLog::VLog(const char* fileName)
 	:_fileName(fileName)
 {
-
+	ofstream myfile (_fileName);
+	if (myfile.is_open()){
+		myfile.close();
+	}
 }
 
 VLog::~VLog() {
