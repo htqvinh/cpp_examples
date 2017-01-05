@@ -1,7 +1,8 @@
 # editable
-TARGET = libVlog.a
-SOURCEDIR = source
+TARGET 		= libVlog.a
+SOURCEDIR 	= source
+FLAGS 		=
 
 INCLUDE = -I./include \
-	-I/data/proj/cpp_examples/vutil/include \
+	-I../vutil/include \
 #

@@ -5,7 +5,6 @@
  *      Author: vinhhtq
  */
 
-#include <general.h>
 #include <stdio.h>
 #include <memory>
 #include <thread>
@@ -14,6 +13,7 @@
 #include <vector>
 #include <queue>
 #include <functional>
+#include "general.h"
 #include "StreamBase.h"
 using namespace std;
 

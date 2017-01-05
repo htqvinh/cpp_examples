@@ -5,14 +5,14 @@ FLAGS 		= -g -std=c++11
 
 INCLUDE 	= \
 	-I./include \
-	-I/data/proj/cpp_examples/chatGen/include \
-	-I/data/proj/cpp_examples/vnet/include \
-	-I/data/proj/cpp_examples/vlog/include \
-	-I/data/proj/cpp_examples/vutil/include \
+	-I../vnet/include \
+	-I../vlog/include \
+	-I../vutil/include \
+	-I../chatGen/include \
 
 LIB 		= \
-	-L/data/proj/cpp_examples/vnet -lVnet \
-	-L/data/proj/cpp_examples/vlog -lVlog \
-	-L/data/proj/cpp_examples/vutil -lVutil \
-	-L/data/proj/cpp_examples/chatGen -lChatGen \
-	-lpthread -static-libstdc++
+	-L../vnet -lVnet \
+	-L../vlog -lVlog \
+	-L../vutil -lVutil \
+	-L../chatGen -lChatGen \
+	-lpthread -static-libstdc++ \

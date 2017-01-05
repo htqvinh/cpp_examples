@@ -1,8 +1,8 @@
 
 include declare.mk
 
-CPPFLAGS = $(FLAGS) $(INCLUDE)	#for g++
-#CFLAGS	= $(FLAGS) $(INCLUDE)	#for gcc
+CPPFLAGS = $(FLAGS) $(INCLUDE) 	#for g++
+#CFLAGS	= $(FLAGS) $(INCLUDE) 	#for gcc
 
 SOURCES = $(shell find $(SOURCEDIR) -name '*.cpp')
 OBJECTS = $(patsubst %.cpp, %.o, $(SOURCES))
