@@ -24,7 +24,7 @@ public:
 		return _Content.empty();
 	}
 
-	void push(const T& element){
+	void push(T element){
 		_Content.push(element);
 	}
 

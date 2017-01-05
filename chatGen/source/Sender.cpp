@@ -14,18 +14,29 @@ Sender::Sender(unsigned num_of_threads)
 Sender::~Sender() {}
 
 void Sender::push(CPackage p){
+	_queue.lock();
 	_queue.push(p);
+	_queue.unlock();
 }
 
 void Sender::process(){
+
+	bool f = false;
+	CPackage p;
+
 	_queue.lock();
-	cout << SND_LOG("sender queue size (%i)\n", _queue.size());
 	if(!_queue.isEmpty()){
-		CPackage p = _queue.pop();
-		p._Method(p._Stream, p._Message);
+		cout << SND_LOG("sender queue size (%i)\n", _queue.size());
+		p = _queue.pop();
+		f = true;
 	}
 	_queue.unlock();
-	this_thread::sleep_for (std::chrono::seconds(2));
+
+	if(f == true){
+		p._Method(p._Stream, p._Message);
+	}
+
+	this_thread::sleep_for (std::chrono::seconds(1));
 }
 
 

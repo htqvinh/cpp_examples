@@ -8,5 +8,7 @@
 #include "VLog.h"
 
 VLog SenderLog("sender.log");
+VLog ReceiverLog("receiver.log");
+VLog ProcLog("process.log");
 
 

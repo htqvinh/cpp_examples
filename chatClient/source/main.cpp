@@ -13,18 +13,20 @@ using namespace std;
 
 int main (int argc, char** argv) {
 
-	Sender sender;
-	sender.active(true);
-
-	string hello = "Hello world!!!";
-	CMessage mess = { MESS_A, (unsigned)hello.size(), (char*)hello.c_str()};
+	CMessage message = { MESS_A, string("Hello world!!!")};
 	StreamBaseSptr stream(new StreamTCP("127.0.0.1", 5001));
 
-	sender.push({ stream, mess, send_and_close});
-	sender.push({ stream, mess, send_and_close});
-	sender.push({ stream, mess, send_and_close});
+	Sender sender;
+	sender.active(true);
+	sender.push({ stream, message, send_and_close});
+	sender.push({ stream, message, send_and_close});
+	sender.push({ stream, message, send_and_close});
+	sender.push({ stream, message, send_and_close});
+	sender.push({ stream, message, send_and_close});
+	sender.push({ stream, message, send_and_close});
+	sender.push({ stream, message, send_and_close});
 
-	this_thread::sleep_for (std::chrono::seconds(10));
+	while(1){ }
 
 	return 0;
 }

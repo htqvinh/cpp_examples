@@ -13,9 +13,13 @@ class VHandler {
 public:
 	VHandler(unsigned num_of_thread = 1);
 	virtual ~VHandler();
-	virtual void process() = 0;
 	int isActive() { return _isActive; };
 	void active(bool f = true);
+
+protected:
+	void run();
+	virtual int init();
+	virtual void process() = 0;
 
 protected:
 	bool 	 _isActive;

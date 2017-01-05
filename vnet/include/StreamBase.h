@@ -40,6 +40,11 @@ public:
 	virtual int connect() = 0;
 	virtual int close() = 0;
 
+public:
+	string 	Ip() 	{ return _Ip;  };
+	int 	Port()  { return _Port;};
+	int 	Fd()    { return _Fd;  };
+
 protected:
 	string  		_Ip;
 	int     		_Port;

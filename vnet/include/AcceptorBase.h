@@ -10,6 +10,9 @@
 
 #include "StreamBase.h"
 
+class AcceptorBase;
+typedef shared_ptr<AcceptorBase> AcceptorBaseSptr;
+
 class AcceptorBase {
 public:
 	AcceptorBase();

@@ -14,11 +14,14 @@ VHandler::VHandler(unsigned num_of_thread)
 
 VHandler::~VHandler() {}
 
-void run(VHandler* ptr){
-	if(!ptr) return;
-	while(ptr->isActive()){
-		ptr->process();
+void VHandler::run(){
+	while(_isActive){
+		process();
 	}
+}
+
+int VHandler::init(){
+	return 0;
 }
 
 void VHandler::active(bool f){
@@ -27,8 +30,12 @@ void VHandler::active(bool f){
 	}
 	_isActive = f;
 	if(_isActive){
+		if(-1 == init()){
+			_isActive = false;
+			return;
+		}
 		for(unsigned i = 0; i < _Number_of_Threads; ++i){
-			thread t(run, this);
+			thread t(&VHandler::run, this);
 			t.detach();
 		}
 	}

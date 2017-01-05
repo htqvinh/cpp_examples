@@ -6,27 +6,21 @@
  */
 
 #include <iostream>
-#include <thread>
-#include "defines.h"
-#include "AcceptorBase.h"
+#include "Processor.h"
+#include "Receiver.h"
 
 using namespace std;
 
-void listen_func(AcceptorBase* acc){
-	while(acc){
-		StreamBase* stream = acc->accept();
-		cout << MAIN_LOG("has a connect from (%s)\n", stream->getIP().c_str());
-	}
-}
+extern int process_packet_to(const CPackage &p);
 
 int main (int argc, char** argv) {
 
-	AcceptorTCP acc;
-	if(acc.init(5001)){
-		std::thread t(listen_func, &acc);
-		t.join();
-	}
+	Receiver rec(AcceptorBaseSptr(new AcceptorTCP()), 5001);
+	Processor pro(rec, process_packet_to);
+	rec.active();
+	pro.active();
 
+	while(1){ }
 	return 0;
 }
 

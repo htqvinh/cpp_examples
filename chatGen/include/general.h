@@ -13,7 +13,7 @@
 #include "StreamBase.h"
 
 enum MTYPE {
-	MESS_A = 0,
+	MESS_A,
 	MESS_B,
 	MESS_C,
 	MESS_D,
@@ -23,25 +23,25 @@ enum MTYPE {
 struct CMessage{
 
 	MTYPE 		_Type;
-	unsigned 	_Len;
-	char*		_Data;
+	string		_Data;
 
-	CMessage(MTYPE type = MESS_MAX, unsigned len = 0, char* data = nullptr);
+	CMessage(MTYPE type = MESS_MAX, string data = "");
 	~CMessage();
 };
 
 typedef std::function<int (StreamBaseSptr stream_ptr, CMessage m)> FunctionSend;
+int send_and_close(StreamBaseSptr stream_ptr, CMessage m);
+int send_and_keep(StreamBaseSptr stream_ptr, CMessage m);
+int recv_and_close(StreamBaseSptr stream_ptr, CMessage& m);
 
 struct CPackage{
 	StreamBaseSptr 		_Stream;
 	CMessage 			_Message;
 	FunctionSend 		_Method;
 
-	CPackage(StreamBaseSptr stream, CMessage mess, FunctionSend method);
+	CPackage();
+	CPackage(StreamBaseSptr stream, CMessage mess, FunctionSend method = send_and_close);
 	~CPackage();
 };
-
-int send_and_close(StreamBaseSptr stream_ptr, CMessage m);
-int send_and_keep(StreamBaseSptr stream_ptr, CMessage m);
 
 #endif /* CHATGENERAL_H_ */

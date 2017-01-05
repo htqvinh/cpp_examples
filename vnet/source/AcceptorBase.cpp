@@ -21,7 +21,7 @@ int AcceptorTCP::init(int port){
 
 	if(_sockId > 0) return _sockId;
 
-    _sockId = socket(AF_INET, SOCK_STREAM, 0);
+    int sockid = socket(AF_INET, SOCK_STREAM, 0);
 
     struct sockaddr_in serv;
     memset(&serv, 0, sizeof(serv));
@@ -29,15 +29,17 @@ int AcceptorTCP::init(int port){
     serv.sin_addr.s_addr = htonl(INADDR_ANY);
     serv.sin_port = htons(port);
 
-    if(bind(_sockId, (struct sockaddr *)&serv, sizeof(struct sockaddr)) == -1){
+    if(bind(sockid, (struct sockaddr *)&serv, sizeof(struct sockaddr)) == -1){
     	cout << NET_ERR("Can't bind socket on port(%i)\n", port);
     	return -1;
     }
 
-    if(listen(_sockId, 1) == -1){
+    if(listen(sockid, 1) == -1){
     	cout << NET_ERR("Can't listen socket\n", "");
     	return -1;
     }
+
+    _sockId = sockid;
 
     return _sockId;
 }
