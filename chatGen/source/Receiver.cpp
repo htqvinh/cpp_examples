@@ -9,7 +9,7 @@
 
 Receiver::Receiver(
 		AcceptorBaseSptr acceptor, unsigned port,
-		std::function<int (StreamBaseSptr, CMessage& )> recv_method,
+		FunctionRecv recv_method,
 		unsigned num_of_threads)
 :
 		_Acceptor(acceptor), _Port(port),

@@ -8,7 +8,7 @@
 #include "Processor.h"
 #include "Receiver.h"
 
-Processor::Processor(Receiver &recv, std::function<int (const CPackage& p)> method, unsigned num_of_threads)
+Processor::Processor(Receiver &recv, FunctionProc method, unsigned num_of_threads)
 	:_Receiver(recv), _Process_Method(method), VHandler(num_of_threads){}
 
 Processor::~Processor() {

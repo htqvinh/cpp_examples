@@ -16,7 +16,7 @@ CMessage::~CMessage(){ }
 CPackage::CPackage(){}
 
 CPackage::CPackage(StreamBaseSptr stream, CMessage mess, FunctionSend method)
-	:_Stream(stream), _Message(mess), _Method(method){ }
+	:_Stream(stream), _Message(mess), _Send_Method(method){ }
 
 CPackage::~CPackage(){ }
 

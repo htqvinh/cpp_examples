@@ -12,6 +12,22 @@
 #include <functional>
 #include "StreamBase.h"
 
+struct CMessage;
+struct CPackage;
+
+int send_and_close(StreamBaseSptr stream_ptr, CMessage m);
+int send_and_keep(StreamBaseSptr stream_ptr, CMessage m);
+int recv_and_close(StreamBaseSptr stream_ptr, CMessage& m);
+int recv_and_keep(StreamBaseSptr stream_ptr, CMessage& m);
+
+typedef std::function<int (const CPackage& p)> FunctionProc;
+typedef std::function<int (StreamBaseSptr, CMessage )> FunctionSend;
+typedef std::function<int (StreamBaseSptr, CMessage&)> FunctionRecv;
+
+/**
+ *
+ */
+
 enum MTYPE {
 	MESS_A,
 	MESS_B,
@@ -29,16 +45,11 @@ struct CMessage{
 	~CMessage();
 };
 
-typedef std::function<int (StreamBaseSptr stream_ptr, CMessage m)> FunctionSend;
-int send_and_close(StreamBaseSptr stream_ptr, CMessage m);
-int send_and_keep(StreamBaseSptr stream_ptr, CMessage m);
-int recv_and_close(StreamBaseSptr stream_ptr, CMessage& m);
-int recv_and_keep(StreamBaseSptr stream_ptr, CMessage& m);
-
 struct CPackage{
+
 	StreamBaseSptr 		_Stream;
 	CMessage 			_Message;
-	FunctionSend 		_Method;
+	FunctionSend 		_Send_Method;
 
 	CPackage();
 	CPackage(StreamBaseSptr stream, CMessage mess, FunctionSend method = send_and_close);

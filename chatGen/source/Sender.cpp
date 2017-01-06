@@ -33,7 +33,7 @@ void Sender::process(){
 	_queue.unlock();
 
 	if(f == true){
-		p._Method(p._Stream, p._Message);
+		p._Send_Method(p._Stream, p._Message);
 	}
 
 	this_thread::sleep_for (std::chrono::seconds(1));

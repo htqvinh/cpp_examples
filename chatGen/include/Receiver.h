@@ -24,7 +24,7 @@ class Receiver:
 public:
 	Receiver(
 			AcceptorBaseSptr acceptor, unsigned port,
-			std::function<int (StreamBaseSptr, CMessage&)> recv_method = recv_and_keep,
+			FunctionRecv recv_method = recv_and_keep,
 			unsigned num_of_threads = 1
 			);
 
@@ -35,10 +35,10 @@ protected:
 	void process();
 
 protected:
-	VQueue<CPackage> _Pool;
-	AcceptorBaseSptr _Acceptor;
-	unsigned _Port;
-	std::function<int (StreamBaseSptr, CMessage& )> _Recv_Method;
+	VQueue<CPackage> 	_Pool;
+	AcceptorBaseSptr 	_Acceptor;
+	unsigned 			_Port;
+	FunctionRecv 		_Recv_Method;
 };
 
 #endif /* INCLUDE_RECEIVER_H_ */

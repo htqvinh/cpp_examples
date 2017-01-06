@@ -25,7 +25,7 @@ void func_1(){
 	mtx.lock();
 	while(vec.size() > 0){
 		CPackage p = vec.front();
-		p._Method(p._Stream, p._Message);
+		p._Send_Method(p._Stream, p._Message);
 		vec.pop();
 	}
 	mtx.unlock();
