@@ -25,4 +25,12 @@ public:
 	int connect(string ip, unsigned port, int& fd);
 };
 
+class ConnectorUDP
+		: public ConnectorBase {
+public:
+	ConnectorUDP();
+	virtual ~ConnectorUDP();
+	int connect(string ip, unsigned port, int& fd);
+};
+
 #endif /* INCLUDE_CONNECTORBASE_H_ */

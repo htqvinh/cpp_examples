@@ -53,9 +53,22 @@ protected:
 
 class StreamTCP
 		: public StreamBase {
+
 public:
 	StreamTCP(string ip, int port, int fd = -1);
 	virtual ~StreamTCP();
+	int send(char* buff, size_t len);
+	int recv(char* buff, size_t len);
+	int connect();
+	int close();
+};
+
+class StreamUDP
+		: public StreamBase {
+
+public:
+	StreamUDP(string ip, int port, int fd = -1);
+	virtual ~StreamUDP();
 	int send(char* buff, size_t len);
 	int recv(char* buff, size_t len);
 	int connect();

@@ -14,7 +14,8 @@ using namespace std;
 int main (int argc, char** argv) {
 
 	CMessage message = { MESS_A, string("Hello world!!!")};
-	StreamBaseSptr stream(new StreamTCP("127.0.0.1", 5001));
+	StreamBaseSptr stream(new StreamUDP("127.0.0.1", 5002));
+//	StreamBaseSptr stream(new StreamTCP("127.0.0.1", 5001));
 
 	Sender sender;
 	sender.active(true);

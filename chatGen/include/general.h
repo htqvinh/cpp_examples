@@ -33,6 +33,7 @@ typedef std::function<int (StreamBaseSptr stream_ptr, CMessage m)> FunctionSend;
 int send_and_close(StreamBaseSptr stream_ptr, CMessage m);
 int send_and_keep(StreamBaseSptr stream_ptr, CMessage m);
 int recv_and_close(StreamBaseSptr stream_ptr, CMessage& m);
+int recv_and_keep(StreamBaseSptr stream_ptr, CMessage& m);
 
 struct CPackage{
 	StreamBaseSptr 		_Stream;

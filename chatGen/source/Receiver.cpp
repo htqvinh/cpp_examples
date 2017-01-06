@@ -7,8 +7,14 @@
 
 #include "Receiver.h"
 
-Receiver::Receiver(AcceptorBaseSptr acceptor, unsigned port, unsigned num_of_threads)
-	:_Acceptor(acceptor), _Port(port), VHandler(num_of_threads){}
+Receiver::Receiver(
+		AcceptorBaseSptr acceptor, unsigned port,
+		std::function<int (StreamBaseSptr, CMessage& )> recv_method,
+		unsigned num_of_threads)
+:
+		_Acceptor(acceptor), _Port(port),
+		_Recv_Method(recv_method),
+		VHandler(num_of_threads){ }
 
 Receiver::~Receiver() { }
 
@@ -28,7 +34,7 @@ void Receiver::process(){
 	cout << REC_LOG("One connection from (%s)\n", stream->Ip().c_str());
 
 	CMessage m;
-	if(!recv_and_close(stream, m)){
+	if(!_Recv_Method(stream, m)){
 		_Pool.lock();
 		_Pool.push({stream, m});
 		_Pool.unlock();
