@@ -28,20 +28,20 @@ typedef std::function<int (StreamBaseSptr, CMessage&)> FunctionRecv;
  *
  */
 
-enum MTYPE {
-	MESS_A,
-	MESS_B,
-	MESS_C,
-	MESS_D,
-	MESS_MAX
-};
-
 struct CMessage{
 
-	MTYPE 		_Type;
+	enum Type {
+		MESS_A,
+		MESS_B,
+		MESS_C,
+		MESS_D,
+		MESS_MAX
+	};
+
+	Type 		_Type;
 	string		_Data;
 
-	CMessage(MTYPE type = MESS_MAX, string data = "");
+	CMessage(Type type = MESS_MAX, string data = "");
 	~CMessage();
 };
 

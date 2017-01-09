@@ -8,7 +8,7 @@
 #include <general.h>
 #include "StreamBase.h"
 
-CMessage::CMessage(MTYPE type, string data)
+CMessage::CMessage(Type type, string data)
 	:_Type(type), _Data(data){ }
 
 CMessage::~CMessage(){ }
@@ -79,7 +79,7 @@ int recv_and_close(StreamBaseSptr stream_ptr, CMessage& m){
 		return -1;
 	}
 
-	m._Type = MTYPE(buff[0]);
+	m._Type = CMessage::Type(buff[0]);
 	m._Data = string(buff + 1);
 
 	stream_ptr->close();
@@ -102,7 +102,7 @@ int recv_and_keep(StreamBaseSptr stream_ptr, CMessage& m){
 		return -1;
 	}
 
-	m._Type = MTYPE(buff[0]);
+	m._Type = CMessage::Type(buff[0]);
 	m._Data = string(buff + 1);
 
 	return 0;
