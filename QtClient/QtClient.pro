@@ -2,18 +2,6 @@ TEMPLATE += app
 QT += quick qml
 CONFIG += c++11
 
-INCLUDEPATH += \
-    ../vnet/include \
-    ../vlog/include \
-    ../vutil/include \
-    ../chatGen/include \
-
-LIBS += \
-    -L../vnet -lVnet \
-    -L../vlog -lVlog \
-    -L../vutil -lVutil \
-    -L../chatGen -lChatGen \
-    -static-libstdc++ \
 
 SOURCES += \
     main.cpp \
@@ -23,5 +11,16 @@ DISTFILES += \
     QViewMain.qml
 
 HEADERS += \
-    QControlerMain.h
+    QControlerMain.h \
 
+INCLUDEPATH += \
+    ../chatGen/include \
+    ../vnet/include \
+    ../vlog/include \
+    ../vutil/include \
+
+LIBS += \
+    -L../chatGen/ -lChatGen \
+    -L../vnet/ -lVnet \
+    -L../vlog/ -lVlog \
+    -L../vutil/ -lVutil \
