@@ -7,6 +7,7 @@
 
 #include "Sender.h"
 #include "defines.h"
+#include "VHandler.h"
 
 Sender::Sender(unsigned num_of_threads)
 	: VHandler(num_of_threads){ }
