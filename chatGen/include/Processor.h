@@ -17,15 +17,15 @@ class Processor
 		: public VHandler
 {
 public:
-	Processor(Receiver &recv, FunctionProc method, unsigned num_of_threads = 1);
+	Processor(Receiver &recv, FunctionProcessPackage method, unsigned num_of_threads = 1);
 	virtual ~Processor();
 
 protected:
 	void process();
 
 protected:
-	FunctionProc _Process_Method;
 	Receiver& _Receiver;
+	FunctionProcessPackage _Process_Method;
 };
 
 #endif /* PROCESSOR_H_ */

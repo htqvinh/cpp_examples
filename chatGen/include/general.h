@@ -20,9 +20,10 @@ int send_and_keep(StreamBaseSptr stream_ptr, CMessage m);
 int recv_and_close(StreamBaseSptr stream_ptr, CMessage& m);
 int recv_and_keep(StreamBaseSptr stream_ptr, CMessage& m);
 
-typedef std::function<int (const CPackage& p)> FunctionProc;
-typedef std::function<int (StreamBaseSptr, CMessage )> FunctionSend;
-typedef std::function<int (StreamBaseSptr, CMessage&)> FunctionRecv;
+typedef std::function<int (const CPackage& p)> 			FunctionProcessPackage;
+typedef std::function<int (const CMessage& m)> 			FunctionProcessMessage;
+typedef std::function<int (StreamBaseSptr, CMessage )> 	FunctionSend;
+typedef std::function<int (StreamBaseSptr, CMessage&)> 	FunctionRecv;
 
 /**
  *
