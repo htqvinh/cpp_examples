@@ -99,10 +99,11 @@ int recv_and_close(StreamBaseSptr stream_ptr, CMessage& m){
 		return -1;
 	}
 
-	recv_message(stream_ptr, m);
-	stream_ptr->close();
+	int rs = recv_message(stream_ptr, m);
+	if(rs == 0)
+		stream_ptr->close();
 
-	return 0;
+	return rs;
 }
 
 int recv_and_keep(StreamBaseSptr stream_ptr, CMessage& m){
@@ -111,9 +112,9 @@ int recv_and_keep(StreamBaseSptr stream_ptr, CMessage& m){
 		return -1;
 	}
 
-	recv_message(stream_ptr, m);
+	int rs = recv_message(stream_ptr, m);
 
-	return 0;
+	return rs;
 }
 
 

@@ -32,17 +32,16 @@ typedef std::function<int (StreamBaseSptr, CMessage&)> 	FunctionRecv;
 struct CMessage{
 
 	enum Type {
-		MESS_A,
-		MESS_B,
-		MESS_C,
-		MESS_D,
-		MESS_MAX
+		M_LOGIN,
+		M_LOGOUT,
+		M_CHATG,
+		M_MAX
 	};
 
 	Type 		_Type;
 	string		_Data;
 
-	CMessage(Type type = MESS_MAX, string data = "");
+	CMessage(Type type = M_MAX, string data = "");
 	~CMessage();
 };
 

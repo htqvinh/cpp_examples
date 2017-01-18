@@ -5,12 +5,16 @@
  *      Author: htqvinh
  */
 
+#include <map>
 #include <iostream>
+#include "Sender.h"
 #include "Processor.h"
 #include "Receiver.h"
 
 using namespace std;
 
+Sender snd;
+map<string, StreamBaseSptr> stream_map;
 extern int process_packet_to(const CPackage &p);
 
 int main (int argc, char** argv) {
@@ -20,6 +24,7 @@ int main (int argc, char** argv) {
 
 	Processor pro(rec, process_packet_to);
 
+	snd.active();
 	rec.active();
 	pro.active();
 
