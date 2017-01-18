@@ -5,7 +5,8 @@ CONFIG += c++11
 
 SOURCES += \
     main.cpp \
-    QControlerMain.cpp
+    QControlerMain.cpp \
+    process.cpp
 
 DISTFILES += \
     QViewMain.qml

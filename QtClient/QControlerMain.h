@@ -12,9 +12,12 @@ public:
     ~QControlerMain();
 
 signals:
+    void sgn_recv_msg(QString message);
 
 public slots:
     void hdn_send_message(QString message);
+    void hdn_signin(QString usrname);
+    void hdn_signout(QString usrname);
 };
 
 #endif // QCONTROLERMAIN_H
