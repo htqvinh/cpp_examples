@@ -1,11 +1,40 @@
 # editable
-TARGET 		= exam
-SOURCEDIR 	= source
-FLAGS 		= -g -std=c++11
+IS_LIB     = false
+NAME       = exam
+COMPILER   = g++
+FLAGS      = -std=c++11
+TYPE       = Debug
+BITS       = 64
 
-INCLUDE 	= \
-	-I./include \
-	
-LIB 		= \
-	-static-libstdc++ \
-#
+# use for commandline
+ifeq ($(MAKECMDGOALS), Debug64)
+  TYPE = Debug
+  BITS = 64
+endif
+ifeq ($(MAKECMDGOALS), Debug32)
+  TYPE = Debug
+  BITS = 32
+endif
+ifeq ($(MAKECMDGOALS), Release64)
+  TYPE = Release
+  BITS = 64
+endif
+ifeq ($(MAKECMDGOALS), Release32)
+  TYPE = Release
+  BITS = 32
+endif
+# end
+
+define make-depend
+endef
+
+DEFINES		=                       \
+
+SOURCEDIR   =                       \
+	source
+
+INCLUDE 	=                       \
+	-I./include                     \
+
+LIBS		=                       \
+	-static-libstdc++               \
