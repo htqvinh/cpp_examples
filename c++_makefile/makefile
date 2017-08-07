@@ -42,8 +42,11 @@ $(BUILD_TYPE)/%.o: %.cpp
 	@mkdir -p $(@D)
 	$(CXX) -c -o $@ $<
 	
-.PHONY: clean
+.PHONY: clean clean-all
 clean:
+	rm -rf $(BUILD_TYPE)
+
+clean-all:
 	rm -rf Debug32 Debug64
 	rm -rf Release32 Release64
 
