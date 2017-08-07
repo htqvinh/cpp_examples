@@ -1,7 +1,5 @@
 include declare.mk
 
-BUILD_TYPE = $(TYPE)$(BITS)
-
 DBUG = 
 ifeq ($(TYPE), Debug)
 DBUG = -g

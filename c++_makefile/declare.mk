@@ -25,6 +25,8 @@ ifeq ($(MAKECMDGOALS), Release32)
 endif
 # end
 
+BUILD_TYPE = $(TYPE)$(BITS)
+
 define make-depend
 endef
 
