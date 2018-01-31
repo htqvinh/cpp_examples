@@ -166,3 +166,6 @@
 <setting id="org.eclipse.cdt.core.formatter.insert_space_before_closing_paren_in_method_invocation" value="do not insert"/>
 </profile>
 </profiles>
+
+
+<!-- VINHHA added -->
