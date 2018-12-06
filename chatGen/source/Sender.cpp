@@ -15,25 +15,20 @@ Sender::Sender(unsigned num_of_threads)
 Sender::~Sender() {}
 
 void Sender::push(CPackage p){
-	_queue.lock();
 	_queue.push(p);
-	_queue.unlock();
+}
+
+int Sender::init(){
+	return 0;
 }
 
 void Sender::process(){
 
 	bool f = false;
+
 	CPackage p;
-
-	_queue.lock();
-	if(!_queue.isEmpty()){
+	if(_queue.pop(p)){
 		cout << SND_LOG("sender queue size (%i)\n", _queue.size());
-		p = _queue.pop();
-		f = true;
-	}
-	_queue.unlock();
-
-	if(f == true){
 		p._Send_Method(p._Stream, p._Message);
 	}
 

@@ -7,18 +7,7 @@
 
 #include <general.h>
 #include "StreamBase.h"
-
-CMessage::CMessage(Type type, string data)
-	:_Type(type), _Data(data){ }
-
-CMessage::~CMessage(){ }
-
-CPackage::CPackage(){}
-
-CPackage::CPackage(StreamBaseSptr stream, CMessage mess, FunctionSend method)
-	:_Stream(stream), _Message(mess), _Send_Method(method){ }
-
-CPackage::~CPackage(){ }
+#define NUMBER_BYTE_OF_DATALEN 2
 
 int send_message(const StreamBaseSptr& stream_ptr, const CMessage& m){
 
@@ -27,15 +16,14 @@ int send_message(const StreamBaseSptr& stream_ptr, const CMessage& m){
 	}
 
 	unsigned dlen = m._Data.size();
-	unsigned char size =  dlen
-			+ 1	/*TYPE: 	1byte */;
+	unsigned size =  dlen + 1/*TYPE: 	1byte */;
 
 	char buff[ size ];
-	buff[0] = m._Type	& 0xFF;
+	buff[0] = m._Type	&  0xFF;
 	memcpy((void*)(buff + 1), (void*)m._Data.c_str(), dlen);
 
 	/* sent total size of packet */
-	if(-1 == stream_ptr->send((char*)&size, sizeof(char)))
+	if(-1 == stream_ptr->send((char*)&size, NUMBER_BYTE_OF_DATALEN))
 		return -1;
 
 	/* sent data of packet */
@@ -71,8 +59,8 @@ int send_and_keep(StreamBaseSptr stream_ptr, CMessage m){
 
 int recv_message(const StreamBaseSptr& stream_ptr, CMessage& m){
 
-	unsigned char dlen;
-	if(stream_ptr->recv((char*)&dlen, sizeof(char)) != 0){
+	unsigned dlen;
+	if(stream_ptr->recv((char*)&dlen, NUMBER_BYTE_OF_DATALEN) != 0){
 		return -1;
 	}
 

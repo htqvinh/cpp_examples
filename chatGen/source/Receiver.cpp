@@ -35,9 +35,7 @@ void Receiver::process(){
 
 	CMessage m;
 	if(!_Recv_Method(stream, m)){
-		_Pool.lock();
 		_Pool.push({stream, m});
-		_Pool.unlock();
 	}
 }
 

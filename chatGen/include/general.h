@@ -41,8 +41,11 @@ struct CMessage{
 	Type 		_Type;
 	string		_Data;
 
-	CMessage(Type type = M_MAX, string data = "");
-	~CMessage();
+	CMessage(Type type = M_MAX, string data = "")
+	:_Type(type), _Data(data) {
+
+	}
+	~CMessage() {}
 };
 
 struct CPackage{
@@ -51,9 +54,14 @@ struct CPackage{
 	CMessage 			_Message;
 	FunctionSend 		_Send_Method;
 
-	CPackage();
-	CPackage(StreamBaseSptr stream, CMessage mess, FunctionSend method = send_and_close);
-	~CPackage();
+	CPackage() {
+
+	}
+	CPackage(StreamBaseSptr stream, CMessage mess, FunctionSend method = send_and_close)
+	:_Stream(stream), _Message(mess), _Send_Method(method) {
+
+	}
+	~CPackage() {}
 };
 
 #endif /* CHATGENERAL_H_ */

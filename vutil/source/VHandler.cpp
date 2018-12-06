@@ -12,16 +12,14 @@ using namespace std;
 VHandler::VHandler(unsigned num_of_thread)
 	:_isActive(false), _Number_of_Threads(num_of_thread){}
 
-VHandler::~VHandler() {}
+VHandler::~VHandler() {
+	_isActive = false;
+}
 
 void VHandler::run(){
 	while(_isActive){
 		process();
 	}
-}
-
-int VHandler::init(){
-	return 0;
 }
 
 void VHandler::active(bool f){

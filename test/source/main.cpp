@@ -5,68 +5,46 @@
  *      Author: vinhhtq
  */
 
-#include <stdio.h>
-#include <memory>
-#include <thread>
-#include <mutex>
-#include <chrono>
-#include <vector>
-#include <queue>
-#include <functional>
-#include <algorithm>
-#include "general.h"
-#include "StreamBase.h"
+#include <iostream>
 using namespace std;
 
 
-mutex mtx;
-queue<CPackage> vec;
+class Base1 {
+public:
+	Base1() { cout << "_base1" ;}
+	~Base1() {}
+	virtual const char* run1() = 0;
+};
 
-void func_1(){
-	mtx.lock();
-	while(vec.size() > 0){
-		CPackage p = vec.front();
-		p._Send_Method(p._Stream, p._Message);
-		vec.pop();
-	}
-	mtx.unlock();
-}
+class Base2 {
+public:
+	Base2() { cout << "_base2" ;}
+	~Base2() {}
+	virtual const char* run2() = 0;
+};
 
-void create_thread(){
-	thread t(func_1);
-	t.detach();
-}
+class AA:
+		public Base1,
+		public Base2
+{
+public:
+	AA(){ cout << "_AA" ;}
+	~AA() {}
 
-void print_vector(vector<int> &v){
-	for(vector<int>::iterator it = v.begin(); it != v.end(); ++it){
-		cout << *it << ", ";
-	}
-	cout << endl;
+	const char* run1() { return "run1"; };
+	const char* run2() { return "run2"; };
+};
+
+void func(Base1* ptr1, Base2* ptr2){
+	cout << endl << ptr1->run1();
+	cout << endl << ptr2->run2();
 }
 
 int main(int argc, char** argv){
 
-//	create_thread();
-//
-//	CMessage mess;
-//	mtx.lock();
-//	vec.push({ StreamBaseSptr(new StreamTCP("127.0.0.1", 5001)), mess, send_and_close});
-//	vec.push({ StreamBaseSptr(new StreamTCP("127.0.0.2", 5001)), mess, send_and_close});
-//	mtx.unlock();
-//
-//	std::this_thread::sleep_for(chrono::seconds(10));
+	AA a;
 
-
-	vector<int> v = {0, 1, 2, 3, 4, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 5, 6, 7, 8, 9, 10, 1, 2, 3};
-
-	sort(v.begin(), v.end());
-	unique(v.begin(), v.end());
-	print_vector(v);
-
-	for(; v.size() > 4; ){
-		v.erase(v.begin() + 4);
-		print_vector(v);
-	}
+	func(&a, &a);
 
 	return 0;
 }

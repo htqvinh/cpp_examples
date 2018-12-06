@@ -1,0 +1,5 @@
+/.metadata/
+*.log
+.*project
+**/Debug*/
+**/Release*/

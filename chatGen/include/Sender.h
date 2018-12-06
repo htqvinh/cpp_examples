@@ -25,7 +25,8 @@ public:
 	void push(CPackage p);
 
 protected:
-	void process();
+	virtual int init();
+	virtual void process();
 
 protected:
 	VQueue<CPackage> _queue;

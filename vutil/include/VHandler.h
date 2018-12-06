@@ -18,7 +18,7 @@ public:
 
 protected:
 	void run();
-	virtual int init();
+	virtual int init() = 0;
 	virtual void process() = 0;
 
 protected:

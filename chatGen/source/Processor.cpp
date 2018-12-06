@@ -14,19 +14,14 @@ Processor::Processor(Receiver &recv, FunctionProcessPackage method, unsigned num
 Processor::~Processor() {
 }
 
+int Processor::init(){
+	return 0;
+}
+
 void Processor::process(){
 
-	bool f = false;
 	CPackage p;
-
-	_Receiver._Pool.lock();
-	if(!_Receiver._Pool.isEmpty()){
-		f = true;
-		p = _Receiver._Pool.pop();
-	}
-	_Receiver._Pool.unlock();
-
-	if(f == true){
+	if(_Receiver._Pool.pop(p)){
 		_Process_Method(p);
 	}
 }

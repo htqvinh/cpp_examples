@@ -21,7 +21,8 @@ public:
 	virtual ~Processor();
 
 protected:
-	void process();
+	virtual int init();
+	virtual void process();
 
 protected:
 	Receiver& _Receiver;
