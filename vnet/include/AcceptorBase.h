@@ -9,6 +9,7 @@
 #define INCLUDE_ACCEPTORBASE_H_
 
 #include "StreamBase.h"
+#define MAX_CLIENTS 30
 
 class AcceptorBase;
 typedef shared_ptr<AcceptorBase> AcceptorBaseSptr;
@@ -18,7 +19,7 @@ public:
 	AcceptorBase();
 	virtual ~AcceptorBase();
 	virtual int init(int port) = 0;
-	virtual StreamBaseSptr accept() = 0;
+	virtual int process(StreamBaseSptr& stream, string& data) = 0;
 
 protected:
 	int _sockId;
@@ -31,7 +32,11 @@ public:
 	AcceptorTCP();
 	~AcceptorTCP();
 	int init(int port);
-	StreamBaseSptr accept();
+	int process(StreamBaseSptr& stream, string& data);
+
+protected:
+	fd_set _readfds; //set of socket descriptors
+	int _client_socket[MAX_CLIENTS];
 };
 
 class AcceptorUDP
@@ -41,7 +46,7 @@ public:
 	AcceptorUDP();
 	~AcceptorUDP();
 	int init(int port);
-	StreamBaseSptr accept();
+	int process(StreamBaseSptr& stream, string& data);
 };
 
 #endif /* INCLUDE_ACCEPTORBASE_H_ */

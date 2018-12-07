@@ -43,7 +43,7 @@ int AcceptorTCP::init(int port){
     }
 
     if(listen(sockid, 1) == -1){
-    	cout << NET_ERR("Can't listen socket\n", "");
+    	cout << NET_ERR("Can't listen socket(%d)\n", sockid);
     	return -1;
     }
 
@@ -52,18 +52,111 @@ int AcceptorTCP::init(int port){
     return _sockId;
 }
 
-StreamBaseSptr AcceptorTCP::accept(){
+int AcceptorTCP::process(StreamBaseSptr& stream, string& data){
 
-	if(_sockId < 0) return nullptr;
+	if(_sockId < 0) return -1;
+
+    struct sockaddr_in address;
+    int addrlen = sizeof(address);
+
+    //clear the socket set
+    FD_ZERO(&_readfds);
+
+    //add master socket to set
+    FD_SET(_sockId, &_readfds);
+    int max_sd = _sockId;
+
+    //add child sockets to set
+    for (unsigned i = 0 ; i < MAX_CLIENTS ; i++) {
+
+        //socket descriptor
+        int sd = _client_socket[i];
+
+        //if valid socket descriptor then add to read list
+        if(sd > 0)
+        	FD_SET(sd , &_readfds);
+
+        //highest file descriptor number, need it for the select function
+        if(sd > max_sd)
+            max_sd = sd;
+    }
+
+    //wait for an activity on one of the sockets, timeout is NULL, so wait indefinitely
+    int activity = select(max_sd + 1 , &_readfds , NULL , NULL , NULL);
+    if ((activity < 0) && (errno != EINTR)) {
+    	cout << NET_ERR("select activity(%d), error(%d)\n", activity, errno);
+    }
+
+    //If something happened on the master socket, then its an incoming connection
+    if (FD_ISSET(_sockId, &_readfds)){
+
+        int new_socket = accept(_sockId, (struct sockaddr *)&address, (socklen_t*)&addrlen);
+        if (new_socket < 0) {
+            cout << NET_ERR("accept error(%d)\n", new_socket);
+            exit(EXIT_FAILURE);
+        }
+
+        //inform user of socket number - used in send and receive commands
+        cout << NET_LOG("new connection, socket fd(%d), ip(%s), port(%d)\n",
+        		new_socket, inet_ntoa(address.sin_addr), ntohs(address.sin_port));
+
+        //TODO
+
+        //add new socket to array of sockets
+        for (unsigned i = 0; i < MAX_CLIENTS; ++i) {
+            //if position is empty
+            if(_client_socket[i] == 0 )
+            {
+                _client_socket[i] = new_socket;
+                cout << NET_LOG("Adding socket(%d) to list at (%d)\n" , new_socket, i);
+                break;
+            }
+        }
+    }
+
+    //else its some IO operation on some other socket
+    for (unsigned i = 0; i < MAX_CLIENTS; ++i)
+    {
+        int sd = _client_socket[i];
+
+        if (FD_ISSET( sd , &_readfds))
+        {
+        	char buffer[1024];
+        	int valread = read( sd , buffer, 1024);
+
+            //Check if it was for closing , and also read the, incoming message
+            if (valread == 0) {
+
+                //Somebody disconnected , get his details and print
+                getpeername(sd , (struct sockaddr*)&address, (socklen_t*)&addrlen);
+                printf("Host disconnected , ip %s , port %d \n" ,
+                      inet_ntoa(address.sin_addr) , ntohs(address.sin_port));
+
+                //Close the socket and mark as 0 in list for reuse
+                close( sd );
+                _client_socket[i] = 0;
+            }
+
+            //Echo back the message that came in
+            else
+            {
+                //set the string terminating NULL byte on the end
+                //of the data read
+                buffer[valread] = '\0';
+                send(sd , buffer , strlen(buffer) , 0 );
+            }
+        }
+    }
 
 	struct sockaddr_in dest;
 	socklen_t socksize = sizeof(struct sockaddr_in);
 
-	int consocket = ::accept(_sockId, (struct sockaddr *)&dest, &socksize);
+	int consocket = accept(_sockId, (struct sockaddr *)&dest, &socksize);
 
-	StreamBaseSptr ptr(new StreamTCP(inet_ntoa(dest.sin_addr), htons(dest.sin_port), consocket));
+	stream = StreamBaseSptr(new StreamTCP(
+			inet_ntoa(dest.sin_addr), htons(dest.sin_port), consocket ));
 
-	return ptr;
+	return 1;
 }
 
 int AcceptorUDP::init(int port){
@@ -92,9 +185,9 @@ int AcceptorUDP::init(int port){
 	return _sockId;
 }
 
-StreamBaseSptr AcceptorUDP::accept(){
+int AcceptorUDP::process(StreamBaseSptr& stream, string& data){
 
-	if(_sockId < 0) return nullptr;
+	if(_sockId < 0) return -1;
 
 	char tmp;
 	struct sockaddr_in dest;
@@ -106,8 +199,8 @@ StreamBaseSptr AcceptorUDP::accept(){
 	 */
 	recvfrom(_sockId, &tmp, sizeof(char), 0, (struct sockaddr *)&dest, &socksize);
 
-	StreamBaseSptr ptr(new StreamUDP(inet_ntoa(dest.sin_addr), htons(dest.sin_port), _sockId));
+	stream = StreamBaseSptr(new StreamUDP(inet_ntoa(dest.sin_addr), htons(dest.sin_port), _sockId));
 
-	return ptr;
+	return 1;
 }
 
