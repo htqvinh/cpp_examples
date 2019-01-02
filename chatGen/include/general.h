@@ -11,57 +11,69 @@
 #include <stdio.h>
 #include <functional>
 #include "StreamBase.h"
+#include "VUtil.h"
 
-struct CMessage;
 struct CPackage;
 
-int send_and_close(StreamBaseSptr stream_ptr, CMessage m);
-int send_and_keep(StreamBaseSptr stream_ptr, CMessage m);
-int recv_and_close(StreamBaseSptr stream_ptr, CMessage& m);
-int recv_and_keep(StreamBaseSptr stream_ptr, CMessage& m);
+int send_and_close(StreamBaseSptr, ByteBuffer&);
+int send_and_keep(StreamBaseSptr, ByteBuffer&);
+int recv_and_close(StreamBaseSptr stream_ptr, ByteBuffer&);
+int recv_and_keep(StreamBaseSptr stream_ptr, ByteBuffer&);
 
-typedef std::function<int (const CPackage& p)> 			FunctionProcessPackage;
-typedef std::function<int (const CMessage& m)> 			FunctionProcessMessage;
-typedef std::function<int (StreamBaseSptr, CMessage )> 	FunctionSend;
-typedef std::function<int (StreamBaseSptr, CMessage&)> 	FunctionRecv;
+typedef std::function<int (CPackage& )> 			FunctionProcessPackage;
+typedef std::function<int (ByteBuffer& )> 			FunctionProcessMessage;
+typedef std::function<int (StreamBaseSptr, ByteBuffer& )> 	FunctionSend;
+typedef std::function<int (StreamBaseSptr, ByteBuffer& )> 	FunctionRecv;
+
+#define NUMBER_BYTES_OF_MSG_TYPE 2
+#define NUMBER_BYTES_OF_MSG_LEN 2
 
 /**
  *
  */
 
-struct CMessage{
-
-	enum Type {
-		M_LOGIN,
-		M_LOGOUT,
-		M_CHATG,
-		M_MAX
-	};
-
-	Type 		_Type;
-	string		_Data;
-
-	CMessage(Type type = M_MAX, string data = "")
-	:_Type(type), _Data(data) {
-
-	}
-	~CMessage() {}
-};
-
 struct CPackage{
 
+	enum Type {
+		_MIN = 0,
+		_LOGIN,
+		_LOGOUT,
+		_CHATG,
+		_MAX
+	};
+
 	StreamBaseSptr 		_Stream;
-	CMessage 			_Message;
+	ByteBuffer 			_Buffer;
 	FunctionSend 		_Send_Method;
 
 	CPackage() {
 
 	}
-	CPackage(StreamBaseSptr stream, CMessage mess, FunctionSend method = send_and_close)
-	:_Stream(stream), _Message(mess), _Send_Method(method) {
+	CPackage(StreamBaseSptr stream, ByteBuffer buffer, FunctionSend method = send_and_close)
+		:_Stream(stream), _Buffer(buffer), _Send_Method(method) {
 
 	}
-	~CPackage() {}
+	~CPackage() {
+
+	}
+
+	CPackage::Type type(){
+		CPackage::Type t = CPackage::_MIN;
+		if(_Buffer.length() >= NUMBER_BYTES_OF_MSG_TYPE){
+			BYTE* dataptr = _Buffer.dataPtr();
+			memcpy(&t, dataptr, NUMBER_BYTES_OF_MSG_TYPE);
+		}
+		return t;
+	}
+
+	unsigned length(){
+		unsigned length = 0;
+		if(_Buffer.length() >= (NUMBER_BYTES_OF_MSG_TYPE + NUMBER_BYTES_OF_MSG_LEN)){
+			BYTE* dataptr = _Buffer.dataPtr() + NUMBER_BYTES_OF_MSG_TYPE;
+			memcpy(&length, dataptr, NUMBER_BYTES_OF_MSG_LEN);
+		}
+		return length;
+	}
 };
 
 #endif /* CHATGENERAL_H_ */

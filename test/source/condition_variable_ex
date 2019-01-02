@@ -1,0 +1,69 @@
+#include <iostream>
+#include <string>
+#include <thread>
+#include <mutex>
+#include <condition_variable>
+
+std::mutex m;
+std::condition_variable cv;
+std::string data;
+bool ready = false;
+bool processed = false;
+bool isRuned = true;
+
+void worker_thread()
+{
+	do{
+
+		// Wait until main() sends data
+		std::unique_lock<std::mutex> lk(m);
+		cv.wait(lk, []{
+			if(!ready){
+				std::cout << "Worker thread is waiting for ready=(TRUE)\n" ;
+			}
+			return ready;
+		});
+
+		// after the wait, we own the lock.
+		std::cout << "Worker thread is processing data\n";
+		data += " after processing";
+		ready = false;
+
+		// Send data back to main()
+		std::cout << "Worker thread signals data processing completed\n";
+		processed = true;
+		cv.notify_one();
+
+	}while (isRuned);
+}
+
+int main()
+{
+    std::thread worker(worker_thread);
+
+    data = "Example data";
+
+    char isContinue = 'Y';
+
+    do{
+
+    // send data to the worker thread
+	{
+		std::cout << "main() signals data ready for processing\n";
+		ready = true;
+		cv.notify_one();
+	}
+
+    // wait for the worker
+    {
+        std::unique_lock<std::mutex> lk(m);
+        cv.wait(lk, []{return processed;});
+    }
+
+    std::cout << "Back in main(), data = " << data << '\n';
+
+    std::cout << "Do you want to be continued (Y/N), default is Y: ?\n";
+    std::cin >> isContinue;
+
+    }while(isContinue == 'Y' or isContinue == 'y');
+}

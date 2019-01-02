@@ -36,15 +36,11 @@ SOURCEDIR   = \
 	source
 
 INCLUDE 	= \
+	-pthread \
 	-I./include \
-	-I../vnet/include \
-	-I../vlog/include \
 	-I../vutil/include \
-	-I../chatGen/include \
 
 LIBS		= \
-	-L../vnet/$(BUILD_TYPE) -lVnet \
-	-L../vlog/$(BUILD_TYPE) -lVlog \
+	-pthread \
+	-static-libstdc++ \
 	-L../vutil/$(BUILD_TYPE) -lVutil \
-	-L../chatGen/$(BUILD_TYPE) -lChatGen \
-	-lpthread -static-libstdc++ \

@@ -10,6 +10,7 @@
 
 #include <thread>
 #include <chrono>
+#include <condition_variable>
 #include "VQueue.h"
 #include "VHandler.h"
 #include "general.h"
@@ -22,14 +23,16 @@ class Sender
 public:
 	Sender(unsigned num_of_threads = 1);
 	virtual ~Sender();
-	void push(CPackage p);
+	void push(CPackage& buff);
 
 protected:
 	virtual int init();
 	virtual void process();
 
 protected:
-	VQueue<CPackage> _queue;
+	VQueue<CPackage> 		_queue;
+	std::mutex 				_mtx;
+	std::condition_variable _cv;
 };
 
 #endif /* INCLUDE_SENDER_H_ */

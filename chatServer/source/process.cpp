@@ -14,53 +14,54 @@ using namespace std;
 extern Sender snd;
 extern map<string, StreamBaseSptr > stream_map;
 
-int process_packet_login (StreamBaseSptr sender, string data);
-int process_packet_chat_group (StreamBaseSptr sender, string data);
+int process_packet_login (StreamBaseSptr sender, ByteBuffer& data);
+int process_packet_chat_group (StreamBaseSptr sender, ByteBuffer& data);
 
-int process_packet_to(const CPackage &p){
+int process_packet_to(CPackage &p){
 
-	CMessage msg = p._Message;
+	CPackage::Type type = p.type();
 
-	std::function<int (StreamBaseSptr, string)> f;
-
-	switch(msg._Type){
-	case CMessage::M_LOGIN: { f = process_packet_login; break; }
-	case CMessage::M_CHATG: { f = process_packet_chat_group; break; }
+	std::function<int (StreamBaseSptr, ByteBuffer&)> f;
+	switch(type){
+	case CPackage::_LOGIN: { f = process_packet_login; break; }
+	case CPackage::_CHATG: { f = process_packet_chat_group; break; }
 	default: { f = NULL; break; }
 	}
 
 	if(f != NULL){
-		f (p._Stream, p._Message._Data);
+		f (p._Stream, p._Buffer);
 	}
 
 	return 0;
 }
 
-int process_packet_login (StreamBaseSptr sender, string data){
+int process_packet_login (StreamBaseSptr sender, ByteBuffer& data){
 
-	cout << MAIN_LOG("Has a account %s\n, is logging", data.c_str());
+	BYTE* dptr = data.dataPtr();
 
-	StreamBaseSptr stream = sender;
-	string usr_name = data;
-	stream_map.insert({usr_name, stream});
-	snd.push({stream, {CMessage::M_LOGIN, "success"}, send_and_keep});
+	unsigned length = 0;
+	memcpy(&length, dptr + NUMBER_BYTES_OF_MSG_TYPE, NUMBER_BYTES_OF_MSG_LEN);
+
+
 
 	return 0;
 }
 
-int process_packet_chat_group (StreamBaseSptr sender, string data){
+int process_packet_chat_group (StreamBaseSptr sender, ByteBuffer& data){
 
-	cout << MAIN_LOG("Message is %s\n", data.c_str());
+	BYTE* dptr = data.dataPtr() + NUMBER_BYTES_OF_MSG_TYPE;
 
-	string content = data;
+	unsigned length = 0;
+	memcpy(&length, dptr , NUMBER_BYTES_OF_MSG_LEN);
+	dptr += NUMBER_BYTES_OF_MSG_LEN;
 
-	for (auto it=stream_map.begin(); it!=stream_map.end(); ++it){
-		StreamBaseSptr stream = (*it).second;
-		if(stream != sender){
-			snd.push({stream, {CMessage::M_CHATG, content}, send_and_keep});
-		}
+	if(length > 0){
+		char content[length + 1];
+		memcpy(content, dptr, length);
+		content[length + 1] = '\0';
+		cout << MAIN_LOG("Client IP[%s] PORT[%d] chat: %s\n",
+							sender->Ip().c_str(), sender->Port(), content);
 	}
-
 	return 0;
 }
 

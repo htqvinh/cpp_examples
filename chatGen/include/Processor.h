@@ -16,6 +16,7 @@ class Receiver;
 class Processor
 		: public VHandler
 {
+
 public:
 	Processor(Receiver &recv, FunctionProcessPackage method, unsigned num_of_threads = 1);
 	virtual ~Processor();

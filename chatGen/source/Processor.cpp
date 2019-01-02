@@ -20,8 +20,21 @@ int Processor::init(){
 
 void Processor::process(){
 
+//    std::unique_lock<std::mutex> lk(_Receiver._mtx);
+//    _Receiver._cv.wait(lk, [this]() -> bool {
+//		if(_Receiver._Pool.isEmpty()){
+//			cout << "Receiver is waiting for package coming...\n";
+//			return false;
+//		}
+//		return true;
+//	});
+
+//	CPackage p;
+//	_Receiver._Pool.pop(p);
+//	_Process_Method(p);
+
 	CPackage p;
-	if(_Receiver._Pool.pop(p)){
-		_Process_Method(p);
-	}
+	_Receiver.waitToPopFromQueue(p);
+	_Process_Method(p);
+
 }

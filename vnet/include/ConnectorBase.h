@@ -12,24 +12,24 @@
 
 class ConnectorBase {
 public:
-	ConnectorBase();
-	virtual ~ConnectorBase();
+	ConnectorBase()			{};
+	virtual ~ConnectorBase(){};
 	virtual int connect(string ip, unsigned port, int& fd) = 0;
 };
 
 class ConnectorTCP
 		: public ConnectorBase {
 public:
-	ConnectorTCP();
-	virtual ~ConnectorTCP();
+	ConnectorTCP() 			{};
+	virtual ~ConnectorTCP() {};
 	int connect(string ip, unsigned port, int& fd);
 };
 
 class ConnectorUDP
 		: public ConnectorBase {
 public:
-	ConnectorUDP();
-	virtual ~ConnectorUDP();
+	ConnectorUDP()			{};
+	virtual ~ConnectorUDP() {};
 	int connect(string ip, unsigned port, int& fd);
 };
 

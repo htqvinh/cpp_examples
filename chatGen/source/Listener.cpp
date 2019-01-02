@@ -13,9 +13,9 @@ Listener::Listener(StreamBaseSptr stream_ptr, FunctionProcessMessage method, uns
 Listener::~Listener(){ }
 
 void Listener::process(){
-	CMessage m;
-	if(!recv_and_keep(_StreamPtr, m)){
-		_Process_Method(m);
+	ByteBuffer buff;
+	if(!recv_and_keep(_StreamPtr, buff)){
+		_Process_Method(buff);
 	}
 }
 

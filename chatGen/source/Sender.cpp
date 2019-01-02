@@ -14,8 +14,10 @@ Sender::Sender(unsigned num_of_threads)
 
 Sender::~Sender() {}
 
-void Sender::push(CPackage p){
+void Sender::push(CPackage& p){
+    std::unique_lock<std::mutex> lk(_mtx);
 	_queue.push(p);
+	_cv.notify_one();
 }
 
 int Sender::init(){
@@ -24,15 +26,19 @@ int Sender::init(){
 
 void Sender::process(){
 
-	bool f = false;
+	std::unique_lock<std::mutex> lk(_mtx);
+	_cv.wait(lk, [this]() -> bool {
+		if(_queue.isEmpty()){
+			cout << "Sender is waiting for package coming...\n";
+			return false;
+		}
+		return true;
+	});
 
 	CPackage p;
-	if(_queue.pop(p)){
-		cout << SND_LOG("sender queue size (%i)\n", _queue.size());
-		p._Send_Method(p._Stream, p._Message);
-	}
+	_queue.pop(p);
+	p._Send_Method(p._Stream, p._Buffer);
 
-	this_thread::sleep_for (std::chrono::seconds(1));
 }
 
 

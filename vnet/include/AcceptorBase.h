@@ -9,6 +9,7 @@
 #define INCLUDE_ACCEPTORBASE_H_
 
 #include "StreamBase.h"
+#include "VUtil.h"
 #define MAX_CLIENTS 30
 
 class AcceptorBase;
@@ -16,37 +17,48 @@ typedef shared_ptr<AcceptorBase> AcceptorBaseSptr;
 
 class AcceptorBase {
 public:
-	AcceptorBase();
-	virtual ~AcceptorBase();
+	AcceptorBase():_listenSocket(-1){}
+	virtual ~AcceptorBase(){};
 	virtual int init(int port) = 0;
-	virtual int process(StreamBaseSptr& stream, string& data) = 0;
+	virtual int process(
+			std::function<int(const StreamBaseSptr&)> processNewConnection,
+			std::function<int(const StreamInfo&)> processDisconnected,
+			std::function<int(const StreamInfo&, ByteBuffer&)> processNewData) = 0;
 
 protected:
-	int _sockId;
+	int _listenSocket;
 };
 
 class AcceptorTCP
 		:public AcceptorBase
 {
 public:
-	AcceptorTCP();
-	~AcceptorTCP();
+	AcceptorTCP(){
+		memset(_connectSocket, 0, sizeof(_connectSocket));
+	};
+	~AcceptorTCP(){};
 	int init(int port);
-	int process(StreamBaseSptr& stream, string& data);
+	int process(
+			std::function<int(const StreamBaseSptr&)> processNewConnection,
+			std::function<int(const StreamInfo&)> processDisconnected,
+			std::function<int(const StreamInfo&, ByteBuffer&)> processNewData);
 
 protected:
 	fd_set _readfds; //set of socket descriptors
-	int _client_socket[MAX_CLIENTS];
+	int _connectSocket[MAX_CLIENTS];
 };
 
 class AcceptorUDP
 		:public AcceptorBase
 {
 public:
-	AcceptorUDP();
-	~AcceptorUDP();
+	AcceptorUDP(){};
+	~AcceptorUDP(){};
 	int init(int port);
-	int process(StreamBaseSptr& stream, string& data);
+	int process(
+			std::function<int(const StreamBaseSptr&)> processNewConnection,
+			std::function<int(const StreamInfo&)> processDisconnected,
+			std::function<int(const StreamInfo&, ByteBuffer&)> processNewData);
 };
 
 #endif /* INCLUDE_ACCEPTORBASE_H_ */

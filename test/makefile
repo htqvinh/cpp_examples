@@ -30,7 +30,7 @@ all: buildrepo $(TARGET)
 $(BUILD_TYPE): buildrepo $(TARGET)
 
 $(TARGET): $(OBJECTS)
-	$(COMP) $@ $(OBJECTS) $(LIBS)
+	$(COMP) $@ $(OBJECTS) $(LIBS) 
 
 $(BUILD_TYPE)/%.o: %.c
 	@mkdir -p $(@D)

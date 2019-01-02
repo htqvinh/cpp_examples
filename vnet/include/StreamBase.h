@@ -26,6 +26,28 @@ using namespace std;
 class StreamBase;
 typedef shared_ptr<StreamBase> StreamBaseSptr;
 
+struct StreamInfo{
+	string  		_Ip;
+	int     		_Port;
+	int     		_Fd;
+
+
+	StreamInfo() = delete;
+	StreamInfo(string ip, int port, int fd = -1)
+		:_Ip(ip), _Port(port), _Fd(fd)
+	{
+	}
+
+
+	bool operator < (const StreamInfo& info) const {
+		if(!(_Port < info._Port))
+			return false;
+		if(_Ip.compare(info._Ip) == 0)
+			return false;
+		return true;
+	}
+};
+
 class StreamBase {
 
 	friend class ConnectorBase;
@@ -33,32 +55,31 @@ class StreamBase {
 	friend class ConnectorUDP;
 
 public:
-	StreamBase(string ip, int port, int fd = -1);
-	virtual ~StreamBase();
-	virtual int send(char* buff, size_t len) = 0;
-	virtual int recv(char* buff, size_t len) = 0;
+	StreamBase(string ip, int port, int fd = -1) :_Info(ip, port, fd){}
+	virtual ~StreamBase() { }
+	virtual int send(void* buff, size_t len) = 0;
+	virtual int recv(void* buff, size_t len) = 0;
 	virtual int connect() = 0;
 	virtual int close() = 0;
 
 public:
-	string 	Ip() 	{ return _Ip;  };
-	int 	Port()  { return _Port;};
-	int 	Fd()    { return _Fd;  };
+	string 	Ip() 		{ return _Info._Ip;  };
+	int 	Port()  	{ return _Info._Port;};
+	int 	Fd()    	{ return _Info._Fd;  };
+	StreamInfo Info() 	{ return _Info; };
 
 protected:
-	string  		_Ip;
-	int     		_Port;
-	int     		_Fd;
+	StreamInfo _Info;
 };
 
 class StreamTCP
 		: public StreamBase {
 
 public:
-	StreamTCP(string ip, int port, int fd = -1);
-	virtual ~StreamTCP();
-	int send(char* buff, size_t len);
-	int recv(char* buff, size_t len);
+	StreamTCP(string ip, int port, int fd = -1): StreamBase(ip, port, fd){}
+	virtual ~StreamTCP() { }
+	int send(void* buff, size_t len);
+	int recv(void* buff, size_t len);
 	int connect();
 	int close();
 };
@@ -67,10 +88,10 @@ class StreamUDP
 		: public StreamBase {
 
 public:
-	StreamUDP(string ip, int port, int fd = -1);
-	virtual ~StreamUDP();
-	int send(char* buff, size_t len);
-	int recv(char* buff, size_t len);
+	StreamUDP(string ip, int port, int fd = -1): StreamBase(ip, port, fd){ }
+	virtual ~StreamUDP() { }
+	int send(void* buff, size_t len);
+	int recv(void* buff, size_t len);
 	int connect();
 	int close();
 };
